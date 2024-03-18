@@ -1,5 +1,6 @@
 import sqlite3
-from Restaurant import Restaurant
+
+from .Restaurant import Restaurant
 
 class Customer:
     def __init__(self, id, first_name, last_name) -> None:
@@ -8,7 +9,7 @@ class Customer:
         self.last_name = last_name
 
     @staticmethod
-    def connect_database():
+    def connect_database(self):
         return sqlite3.connect("database.db")
     
     def reviews(self):
