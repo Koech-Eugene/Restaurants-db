@@ -40,6 +40,49 @@ def create_tables():
     conn.commit()
     conn.close()
 
+def sample_data():
+    conn = sqlite3.connect("database.db")
+    cursor = conn.cursor()
+
+    # Clear existing data
+    cursor.executescript("""
+    DELETE FROM Reviews;
+    DELETE FROM Customers;
+    DELETE FROM Restaurants;
+    """)
+
+    # Insert sample Restaurants
+    restaurants = [
+        ('Kwa Mathe', 'High'),  # Price here is 'Low', 'Medium', 'High'
+        ('Kibandaski', 'Medium'),
+        ('Chafua', 'Low'),
+    ]
+    cursor.executemany('INSERT INTO Restaurants (name, price) VALUES (?, ?)', restaurants)
+
+    # Insert sample Customers
+    customers = [
+        ('John', 'Doe'),
+        ('Jane', 'Doe'),
+        ('Eugene', 'Doe'),
+    ]
+    cursor.executemany('INSERT INTO Customers (first_name, last_name) VALUES (?, ?)', customers)
+
+   
+    conn.commit()
+
+    
+    reviews = [
+        (1, 1, 5),  
+        (1, 2, 4),  
+        (2, 3, 3), 
+    ]
+    cursor.executemany('INSERT INTO Reviews (restaurant_id, customer_id, star_rating) VALUES (?, ?, ?)', reviews)
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
 if __name__ == '__main__':
     create_tables()
+    sample_data()
     print("Database and tables createted.")
