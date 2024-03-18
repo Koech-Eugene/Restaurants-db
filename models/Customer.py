@@ -1,4 +1,5 @@
 import sqlite3
+from Restaurant import Restaurant
 
 class Customer:
     def __init__(self, id, first_name, last_name) -> None:
@@ -30,3 +31,24 @@ class Customer:
         reviewed_restaurants = cur.fetchall()  # Fetch all restaurants reviewed by the customer
         conn.close()
         return reviewed_restaurants
+
+    def name(self):
+        return f"{self.first_name} {self.last_name}"
+    
+    def favorite_restaurant(self):
+        conn = self.connect_database()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT restaurants.*
+            FROM restaurants
+            JOIN reviews ON restaurants.id = reviews.restaurant_id
+            WHERE reviews.customer_id = ?
+            ORDER BY reviews.star_rating DESC
+            LIMIT 1
+            """, (self.id,))
+        favorite_restaurant_info = cur.fetchone()
+        conn.close()
+        if favorite_restaurant_info:
+            return Restaurant(*favorite_restaurant_info)
+        else:
+            return None
