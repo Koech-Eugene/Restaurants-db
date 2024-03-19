@@ -11,7 +11,7 @@ class Restaurant:
         return sqlite3.connect("database.db")
     
     def reviews(self):
-        conn = self.connect_database()
+        conn = self.connect_database(self)
         cur = conn.cursor()
         cur.execute("SELECT * FROM reviews WHERE restaurant_id = ?", (self.id,))
         return cur.fetchall()
@@ -31,7 +31,7 @@ class Restaurant:
 
     @classmethod
     def fanciest(cls):
-        conn = cls.connect_database()
+        conn = cls.connect_database(cls)
         cur = conn.cursor()
         cur.execute("SELECT * FROM restaurants ORDER BY price DESC LIMIT 1")
         fanciest_restaurant_info = cur.fetchone()
@@ -42,7 +42,7 @@ class Restaurant:
             return None
 
     def all_reviews(self):
-        conn = self.connect_database()
+        conn = self.connect_database(self)
         cur = conn.cursor()
         cur.execute("""
             SELECT reviews.star_rating, customers.first_name, customers.last_name

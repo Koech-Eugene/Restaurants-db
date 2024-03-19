@@ -13,7 +13,7 @@ class Customer:
         return sqlite3.connect("database.db")
     
     def reviews(self):
-        conn = self.connect_database()
+        conn = self.connect_database(self)
         cur = conn.cursor()
         cur.execute("SELECT * FROM reviews WHERE customer_id = ?", (self.id,))
         customer_reviews = cur.fetchall()  # Fetch all reviews left by the customer
@@ -21,7 +21,7 @@ class Customer:
         return customer_reviews
     
     def restaurants(self):
-        conn = self.connect_database()
+        conn = self.connect_database(self)
         cur = conn.cursor()
         cur.execute("""
             SELECT DISTINCT restaurants.*
@@ -37,7 +37,7 @@ class Customer:
         return f"{self.first_name} {self.last_name}"
     
     def favorite_restaurant(self):
-        conn = self.connect_database()
+        conn = self.connect_database(self)
         cur = conn.cursor()
         cur.execute("""
             SELECT restaurants.*
